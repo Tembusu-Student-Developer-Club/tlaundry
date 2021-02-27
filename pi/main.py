@@ -24,8 +24,7 @@ GPIO.setup(BTN_PIN, GPIO.IN)
 #     print(GPIO.input(BTN_PIN))
 #     time.sleep(1)
 
-print("Poweroff button enabled. HOLD pins 38 and 40 to poweroff.")
-
+print("Poweroff button enabled - CONNECT pins 38 and 40.")
 while(True):
     if(GPIO.input(BTN_PIN)):
         print("\nPoweroff Button pressed. HOLD to shutdown.")
