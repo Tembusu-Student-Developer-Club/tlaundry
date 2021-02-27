@@ -1,4 +1,4 @@
-print "Booting python script..."
+print("Booting python script...")
 
 import RPi.GPIO as GPIO
 import time
@@ -42,7 +42,7 @@ class Device():
         else:
             self.num_off += 1
         
-        print str(self)
+        print(str(self))
 
     def compute_and_reset_state(self):
         # This is called to get the current state of the sensor right before sending it to Firebase
@@ -56,7 +56,7 @@ class Device():
             self.state = reading
         # Output to test LED if the correct pin is activated 
         #if self.pin == TEST_GPIO_PIN:
-        #    print "Setting GPIO output to " + str(reading)
+        #    print("Setting GPIO output to " + str(reading))
         #    GPIO.output(LED_PIN, self.state)
 
         # Reset on/off count
@@ -93,11 +93,11 @@ def setup_devices_gpio(devices):
     #GPIO.setup(LED_PIN, GPIO.OUT)
 
 def exception_handler(request, exception):
-    print "For request: " + str(request) + " got exception: " + str(exception)
+    print("For request: " + str(request) + " got exception: " + str(exception))
 
 
 def response_callback(response):
-    print response
+    print(response)
 
 def have_internet():
     conn = httplib.HTTPConnection("www.google.com", timeout=5)
@@ -131,21 +131,20 @@ if __name__ == "__main__":
         PI_DEVICE_ID = get_pi_serial() or "dev-non-pi"
     
         while not have_internet():
-            print "Waiting for internet to come online..."
+            print("Waiting for internet to come online...")
             time.sleep(1)
-            #print "No connection.. exiting.. supervisor please restart me."
+            #print("No connection.. exiting.. supervisor please restart me.")
             #sys.exit(1)
             
-        print "Initializing Firebase connection"
+        print("Initializing Firebase connection")
         # Open up network conn to Firebase
         firebase = firebase.FirebaseApplication('https://tlaundry2.firebaseio.com', None)
-        print "Firebase connection set up."
+        print("Firebase connection set up.")
 
-        print "Starting async firebase get"
+        print("Starting async firebase get")
 
         # Initialize washers and dryers
-        DEVICES = [Device(**washer) for washer in WASHERS]
-        DEVICES += [Device(**dryer) for dryer in DRYERS]
+        DEVICES = [Device(**machine) for machine in MACHINES]
 
         setup_devices_gpio(DEVICES)
 
@@ -162,11 +161,11 @@ if __name__ == "__main__":
                     device_state = device.compute_and_reset_state()
                     current_state[str(device.name)] =  device.get_status_string()
 
-                print str(current_state)
+                print(str(current_state))
 
                 current_state["ip-"+PI_DEVICE_ID] = check_output(['hostname', '-I'])
 
                 result = firebase.patch_async('/'+FLOOR_NUMBER, current_state, callback=response_callback)
 
             except Exception as e:
-                print "Exception msg: " + str(e.message) + " args = " + str(e.args)
+                print("Exception msg: " + str(e.message) + " args = " + str(e.args))
