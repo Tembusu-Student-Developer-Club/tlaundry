@@ -138,7 +138,7 @@ if __name__ == "__main__":
             
         print("Initializing Firebase connection")
         # Open up network conn to Firebase
-        firebase = firebase.FirebaseApplication('https://tlaundry2.firebaseio.com', None)
+        firebase = firebase.FirebaseApplication('https://tlaundry3-default-rtdb.asia-southeast1.firebasedatabase.app', None)
         print("Firebase connection set up.")
 
         print("Starting async firebase get")
